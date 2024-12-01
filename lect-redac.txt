@@ -61,3 +61,66 @@ si (nbRedac = 0 and nbLect = 0)
           nbRedac.signal
 finsi
 
+_______________________________________________________
+*FIFO*
+
+(1) interface du moniteur
+          DL
+          TL 
+          DE
+          TE 
+          
+(2) predicat d'acceptation
+          DL: si aucun redacteur n'a acces au fichier
+          DE: si aucun redacteur ou lecteur n'a acces au fichier
+(3) Variables d’etat 
+          nbLect
+          nbRedac
+          isNextRedac
+
+          DL: nbRedac = 0 
+          DE: nbRedac = 0 and nbLect = 0
+(4) Invariant 
+( 1 >= nbRedac  and nbLect = 0) or ( nbLect >= 0 and nbRrdac = 0)
+ 
+(5) Variables conditions 
+          AccesLecture
+          AccesEcriture
+
+(6) operations
+
+DL: 
+si !( nbRedac = 0 )
+          AccesLecture.wait
+Finsi
+{ (1) nbRedacAtt = 0 and nbRedac = 0 }
+nbLect ++
+{ (2) nbRedacAtt = 0 and nbRedac = 0 }
+si !(isNextRedac = False)
+          AccesLecture.signal
+finsi
+
+TL:
+nbLect -- 
+si (nbRedac = 0 and nbLect = 0)
+          { (3) nbLect = 0 and nbRedac = 0}
+          AccesEcriture.signal
+finsi
+
+DE:
+si !(nbRedac = 0 and nbLect = 0)
+          nbEcriture.wait
+finsi
+{ (5) nbRedac = 0 and nbLect = 0 }
+nbRedac ++
+
+TE:
+nbRedac --
+si (nbRedac = 0 and isNextRedac = False)
+          { (6) nbRedac = 0 and nbRedacAtt = 0}
+          nbLect.signal
+si (nbRedac = 0 and nbLect = 0 and isNextRedac = True)
+          { (7) nbRedac = 0 and nbLect = 0}
+          nbRedac.signal
+finsi
+
