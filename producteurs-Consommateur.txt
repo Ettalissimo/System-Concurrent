@@ -4,7 +4,7 @@
 (2) predicat d'acceptation
   deposer : il y a de la place, le tampon n’est pas plein  
   retirer : il y a quelque chose, le tampon n’est pas vide
-(3) Variables d’´etat :
+(3) Variables d’etat :
   nbOccupees : natural
   deposer : nbOccupees < N   (predicat d'acceptation formellement)
   retirer : nbOccupees > 0
