@@ -1,0 +1,41 @@
+(1) interface du moniteur
+  deposer()
+  retirer()
+(2) predicat d'acceptation
+  deposer : il y a de la place, le tampon n’est pas plein  
+  retirer : il y a quelque chose, le tampon n’est pas vide
+(3) Variables d’´etat :
+  nbOccupees : natural
+  deposer : nbOccupees < N   (predicat d'acceptation formellement)
+  retirer : nbOccupees > 0
+(4) Invariant : 
+  0 <= nbOccupees <= N
+(5) Variables conditions : 
+  PasPlein, PasVide
+
+(6) Les operations
+  deposer(in v)
+    si ¬(nbOccupees < N) alors
+      PasPlein.wait()
+    finsi
+    { (1) nbOccupees < N }
+    nbOccupees ++
+    { (2) N >= nbOccupees > 0 }
+    PasVide.signal()
+
+
+  retirer(out v)
+    si ¬(nbOccupees > 0) alors
+      PasVide.wait()
+    finsi
+    { (3) nbOccupees > 0 }
+    nbOccupees --
+    { (4) N > nbOccupees >= 0 }
+    PasPlein.signal()
+
+(7) Verification
+
+  (2) -> (3)
+  (5) -> (1)
+
+  
